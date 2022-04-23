@@ -1,0 +1,73 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class Task {
+	
+	private int daysForCompletionDevTask;
+	private int daysForCompletionPmTask;
+	private int daysForCompletionQaTask;
+	
+	private void devTaskCompletion() {
+		pmTaskCompletion();
+		setDaysForCompletionDevTask(10);
+	}
+	
+	private void pmTaskCompletion() {
+		setDaysForCompletionPmTask(4);
+	}
+	private void qaTaskCompletion() {
+		devTaskCompletion();
+		setDaysForCompletionQaTask(5);
+	}
+	
+	private Boolean verifyIfProjectCanBeCompleted(Date expectedCompletionDate) throws ParseException {
+		try {
+			qaTaskCompletion();
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Calendar c = Calendar.getInstance();
+			c.setTime(new Date()); // Using today's date
+			c.add(Calendar.DATE, getDaysForCompletionQaTask()+getDaysForCompletionDevTask()+getDaysForCompletionPmTask()); // Adding 5 days
+			Date dateWithoutTime = formatter.parse(formatter.format(c.getTime()));
+			if(dateWithoutTime.compareTo(expectedCompletionDate)<=0) {
+				return true;
+			}
+			
+		}catch(Exception e) {
+			System.out.print(e);//As logger object is not created passing e to console if there ia an error
+		}
+		return false;
+	}
+		
+	public static void main(String[] args) throws ParseException {
+		Task t = new Task();
+		String expectedDate="14/05/2022";
+		Date date=new SimpleDateFormat("dd/MM/yyyy").parse(expectedDate);
+		Boolean completionStatus=t.verifyIfProjectCanBeCompleted(date);
+		System.out.println(completionStatus);
+	}
+	public int getDaysForCompletionDevTask() {
+		return daysForCompletionDevTask;
+	}
+
+	public void setDaysForCompletionDevTask(int daysForCompletionDevTask) {
+		this.daysForCompletionDevTask = daysForCompletionDevTask;
+	}
+
+	public int getDaysForCompletionPmTask() {
+		return daysForCompletionPmTask;
+	}
+
+	public void setDaysForCompletionPmTask(int daysForCompletionPmTask) {
+		this.daysForCompletionPmTask = daysForCompletionPmTask;
+	}
+
+	public int getDaysForCompletionQaTask() {
+		return daysForCompletionQaTask;
+	}
+
+	public void setDaysForCompletionQaTask(int daysForCompletionQaTask) {
+		this.daysForCompletionQaTask = daysForCompletionQaTask;
+	}
+}
